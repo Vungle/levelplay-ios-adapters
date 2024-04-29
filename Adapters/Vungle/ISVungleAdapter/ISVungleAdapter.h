@@ -30,3 +30,9 @@ static NSString * Githash = @"";
 @interface ISVungleAdapter : ISBaseAdapter
 
 @end
+
+// This struct will be removed after SDK updaed
+typedef struct VNGAdSize {
+  CGSize size;
+  NSUInteger flags;
+} VNGAdSize;
