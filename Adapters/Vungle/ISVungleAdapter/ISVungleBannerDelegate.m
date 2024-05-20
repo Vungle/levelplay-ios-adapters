@@ -11,29 +11,24 @@
 @implementation ISVungleBannerDelegate
 
 - (instancetype)initWithPlacementId:(NSString *)placementId
-                      containerView:(UIView *)containerView
                         andDelegate:(id<ISBannerAdapterDelegate>)delegate {
     self = [super init];
     if (self) {
         _placementId = placementId;
-        _containerView = containerView;
         _delegate = delegate;
     }
     return self;
 }
 
-#pragma mark - Banner Delegate
+#pragma mark - VungleBannerView Delegate
 
-- (void)bannerAdDidLoad:(VungleBanner * _Nonnull)banner {
+- (void)bannerAdDidLoad:(VungleBannerView * _Nonnull)bannerView {
     LogAdapterDelegate_Internal(@"placementId = %@", self.placementId);
-
-    [self.delegate adapterBannerDidLoad:self.containerView];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [banner presentOn:self.containerView];
-    });
+    [self.delegate adapterBannerDidLoad:bannerView];
+    // aki:todo - might need to retun the w and h to IS side...?
 }
 
-- (void)bannerAdDidFailToLoad:(VungleBanner * _Nonnull)banner
+- (void)bannerAdDidFailToLoad:(VungleBannerView * _Nonnull)bannerView
                     withError:(NSError * _Nonnull)error {
     LogAdapterDelegate_Internal(@"placementId = %@ error = %@", self.placementId, error);
     
@@ -45,17 +40,17 @@
     [self.delegate adapterBannerDidFailToLoadWithError:bannerError];
 }
 
-- (void)bannerAdDidTrackImpression:(VungleBanner * _Nonnull)banner {
+- (void)bannerAdDidTrackImpression:(VungleBannerView * _Nonnull)bannerView {
     LogAdapterDelegate_Internal(@"placementId = %@", self.placementId);
     [self.delegate adapterBannerDidShow];
 }
 
-- (void)bannerAdDidClick:(VungleBanner * _Nonnull)banner {
+- (void)bannerAdDidClick:(VungleBannerView * _Nonnull)bannerView {
     LogAdapterDelegate_Internal(@"placementId = %@", self.placementId);
     [self.delegate adapterBannerDidClick];
 }
 
-- (void)bannerAdWillLeaveApplication:(VungleBanner * _Nonnull)banner {
+- (void)bannerAdWillLeaveApplication:(VungleBannerView * _Nonnull)bannerView {
     LogAdapterDelegate_Internal(@"placementId = %@", self.placementId);
     [self.delegate adapterBannerWillLeaveApplication];
 }

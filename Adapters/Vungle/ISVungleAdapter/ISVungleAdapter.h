@@ -29,6 +29,8 @@ static NSString * Githash = @"";
 
 @interface ISVungleAdapter : ISBaseAdapter
 
+- (CGFloat)getAdaptiveHeightWithWidth:(CGFloat)width;
+
 @end
 
 // This struct will be removed after SDK updaed

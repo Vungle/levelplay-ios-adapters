@@ -635,11 +635,9 @@ static InitState initState = INIT_STATE_NONE;
 
     // create banner container view
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIView *containerView = [[UIView alloc] initWithFrame:[self getVNGAdSizeFrame:[self getBannerSize:size]]];
 
         // initialize banner ad delegate
         ISVungleBannerDelegate *bannerAdDelegate = [[ISVungleBannerDelegate alloc] initWithPlacementId:placementId
-                                                                                         containerView:containerView
                                                                                            andDelegate:delegate];
 
         [self.bannerPlacementIdToVungleAdDelegate setObject:bannerAdDelegate
@@ -648,21 +646,20 @@ static InitState initState = INIT_STATE_NONE;
         [self.bannerPlacementIdToAdSize setObject:size
                                            forKey:placementId];
 
+        // calculate VungleAdSize
+        VungleAdSize *adSize = [self getBannerSize:size];
+        
         // create vungle banner ad
-        VungleBanner *vungleBannerAd = [[VungleBanner alloc] initWithPlacementId:placementId
-                                                                            size:BannerSizeRegular];
+        VungleBannerView *vungleBannerViewAd = [[VungleBannerView alloc] initWithPlacementId: placementId vungleAdSize: adSize];
         
-        // This API will be updated to take VNGSize as argument.
-//        VungleBanner *vungleBannerAd = [[VungleBanner alloc] initWithPlacementId:placementId
-//                                                                            size:[self getBannerSize:size]];
-        
-        vungleBannerAd.delegate = bannerAdDelegate;
+        // set delegate
+        vungleBannerViewAd.delegate = bannerAdDelegate;
 
-        [self.bannerPlacementIdToAd setObject:vungleBannerAd
+        [self.bannerPlacementIdToAd setObject:vungleBannerViewAd
                                        forKey:placementId];
 
         // load banner
-        [vungleBannerAd load:serverData];
+        [vungleBannerViewAd load:serverData];
     });
 }
 
@@ -683,18 +680,8 @@ static InitState initState = INIT_STATE_NONE;
 
 // This API needs to be override
 - (CGFloat)getAdaptiveHeightWithWidth:(CGFloat)width {
-    return [self getCurrentOrientationAnchoredAdaptiveBannerAdSize:width].size.height;
+    return [VungleAdSize VungleAdSizeWithWidth:width].size.height;
 }
-
-// This is temporary API. This API should be inside VungleAds SDK.
-- (VNGAdSize)getCurrentOrientationAnchoredAdaptiveBannerAdSize:(CGFloat)width {
-    // This will return VNGSize (new object).
-    VNGAdSize testSize;
-    testSize.size = CGSizeMake(320, 50);
-    testSize.flags = 123;
-    return testSize;
-}
-
 
 - (NSDictionary *)getBannerBiddingDataWithAdapterConfig:(ISAdapterConfig *)adapterConfig
                                                  adData:(NSDictionary *)adData {
@@ -790,52 +777,28 @@ static InitState initState = INIT_STATE_NONE;
     return @{@"token": returnedToken};
 }
 
-// This API will need return VNGAdSize instead of BannerSize.
-- (VNGAdSize)getBannerSize:(ISBannerSize *)size {
-    VNGAdSize vngSize;
-    vngSize.size = CGSizeMake(320, 50);
-    
-    if ([size.sizeDescription isEqualToString:@"BANNER"]) {
-        vngSize.size = CGSizeMake(320, 50);
+- (VungleAdSize *)getBannerSize:(ISBannerSize *)size {
+    VungleAdSize *adSize = [VungleAdSize VungleAdSizeBannerRegular];
+    if ([size.sizeDescription isEqualToString:@"CUSTOM"]) {
+        adSize = [VungleAdSize VungleAdSizeFromCGSize:CGSizeMake(size.width, size.height)];
+    } else if ([size.sizeDescription isEqualToString:@"BANNER"] || [size.sizeDescription isEqualToString:@"LARGE"]) {
+        adSize = [VungleAdSize VungleAdSizeBannerRegular];
     } else if ([size.sizeDescription isEqualToString:@"RECTANGLE"]) {
-        vngSize.size = CGSizeMake(300, 250);
+        adSize = [VungleAdSize VungleAdSizeMREC];
+    } else if ([size.sizeDescription isEqualToString:@"LEADERBOARD"]) {
+        adSize = [VungleAdSize VungleAdSizeLeaderboard];
     } else if ([size.sizeDescription isEqualToString:@"SMART"]) {
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            vngSize.size = CGSizeMake(928, 90);
+            adSize = [VungleAdSize VungleAdSizeLeaderboard];
         } else {
-            vngSize.size = CGSizeMake(320, 50);
+            adSize = [VungleAdSize VungleAdSizeBannerRegular];
         }
     }
-
-    if ([size respondsToSelector:@selector(containerParams)]) {
-        if (size.isAdaptive) {
-            vngSize = [self getCurrentOrientationAnchoredAdaptiveBannerAdSize:size.containerParams.width];
-        }
-    } else {
-        NSLog(@"containerParams is not supported");
+    if (size.isAdaptive) {
+        adSize = [VungleAdSize VungleAdSizeWithWidth:size.containerParams.width];
     }
 
-    return vngSize;
-}
-
-// Just helper API to covert VNGAdSize to CGRect.
-- (CGRect)getVNGAdSizeFrame:(VNGAdSize)adSize {
-    return CGRectMake(0, 0, adSize.size.width, adSize.size.height);
-}
-
-
-- (CGRect)getBannerFrame:(ISBannerSize *)size {
-    CGRect rect = CGRectMake(0, 0, 320, 50);
-    
-    if ([size.sizeDescription isEqualToString:@"RECTANGLE"]) {
-        rect = CGRectMake(0, 0, 300, 250);
-    } else if ([size.sizeDescription isEqualToString:@"SMART"]) {
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            rect = CGRectMake(0, 0, 728, 90);
-        }
-    }
-
-    return rect;
+    return adSize;
 }
 
 @end
