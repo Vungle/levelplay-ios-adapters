@@ -11,14 +11,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ISVungleBannerDelegate : NSObject <VungleBannerDelegate>
+@interface ISVungleBannerDelegate : NSObject <VungleBannerViewDelegate>
 
 @property (nonatomic, strong) NSString *placementId;
-@property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, weak) id<ISBannerAdapterDelegate> delegate;
 
 - (instancetype)initWithPlacementId:(NSString *)placementId
-                      containerView:(UIView *)containerView
                         andDelegate:(id<ISBannerAdapterDelegate>)delegate;
 
 @end

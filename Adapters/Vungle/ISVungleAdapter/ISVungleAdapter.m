@@ -639,13 +639,10 @@ static InitState initState = INIT_STATE_NONE;
     [self.bannerPlacementIdToSmashDelegate setObject:delegate
                                               forKey:placementId];
 
-    // create banner container view
+    // create Vungle banner view
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIView *containerView = [[UIView alloc] initWithFrame:[self getBannerFrame:size]];
-
         // initialize banner ad delegate
         ISVungleBannerDelegate *bannerAdDelegate = [[ISVungleBannerDelegate alloc] initWithPlacementId:placementId
-                                                                                         containerView:containerView
                                                                                            andDelegate:delegate];
 
         [self.bannerPlacementIdToVungleAdDelegate setObject:bannerAdDelegate
@@ -654,17 +651,20 @@ static InitState initState = INIT_STATE_NONE;
         [self.bannerPlacementIdToAdSize setObject:size
                                            forKey:placementId];
 
+        // calculate VungleAdSize
+        VungleAdSize *adSize = [self getBannerSize:size];
+        
         // create vungle banner ad
-        VungleBanner *vungleBannerAd = [[VungleBanner alloc] initWithPlacementId:placementId
-                                                                            size:[self getBannerSize:size]];
+        VungleBannerView *vungleBannerViewAd = [[VungleBannerView alloc] initWithPlacementId: placementId vungleAdSize: adSize];
+        
+        // set delegate
+        vungleBannerViewAd.delegate = bannerAdDelegate;
 
-        vungleBannerAd.delegate = bannerAdDelegate;
-
-        [self.bannerPlacementIdToAd setObject:vungleBannerAd
+        [self.bannerPlacementIdToAd setObject:vungleBannerViewAd
                                        forKey:placementId];
 
         // load banner
-        [vungleBannerAd load:serverData];
+        [vungleBannerViewAd load:serverData];
     });
 }
 
@@ -686,6 +686,10 @@ static InitState initState = INIT_STATE_NONE;
                                                  adData:(NSDictionary *)adData {
     NSString *placementId = adapterConfig.settings[kPlacementId];
     return [self getBiddingDataWithPlacementId:placementId];
+}
+
+- (CGFloat)getAdaptiveHeightWithWidth:(CGFloat)width {
+    return [VungleAdSize VungleAdSizeWithWidth:width].size.height;
 }
 
 #pragma mark - Memory Handling
@@ -776,30 +780,28 @@ static InitState initState = INIT_STATE_NONE;
     return @{@"token": returnedToken};
 }
 
-- (BannerSize)getBannerSize:(ISBannerSize *)size {
-    if ([size.sizeDescription isEqualToString:@"RECTANGLE"]) {
-        return BannerSizeMrec;
+- (VungleAdSize *)getBannerSize:(ISBannerSize *)size {
+    VungleAdSize *adSize = [VungleAdSize VungleAdSizeBannerRegular];
+    if ([size.sizeDescription isEqualToString:@"CUSTOM"]) {
+        adSize = [VungleAdSize VungleAdSizeFromCGSize:CGSizeMake(size.width, size.height)];
+    } else if ([size.sizeDescription isEqualToString:@"BANNER"] || [size.sizeDescription isEqualToString:@"LARGE"]) {
+        adSize = [VungleAdSize VungleAdSizeBannerRegular];
+    } else if ([size.sizeDescription isEqualToString:@"RECTANGLE"]) {
+        adSize = [VungleAdSize VungleAdSizeMREC];
+    } else if ([size.sizeDescription isEqualToString:@"LEADERBOARD"]) {
+        adSize = [VungleAdSize VungleAdSizeLeaderboard];
     } else if ([size.sizeDescription isEqualToString:@"SMART"]) {
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            return BannerSizeLeaderboard;
+            adSize = [VungleAdSize VungleAdSizeLeaderboard];
+        } else {
+            adSize = [VungleAdSize VungleAdSizeBannerRegular];
         }
     }
-        
-    return BannerSizeRegular;
-}
-
-- (CGRect)getBannerFrame:(ISBannerSize *)size {
-    CGRect rect = CGRectMake(0, 0, 320, 50);
-    
-    if ([size.sizeDescription isEqualToString:@"RECTANGLE"]) {
-        rect = CGRectMake(0, 0, 300, 250);
-    } else if ([size.sizeDescription isEqualToString:@"SMART"]) {
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            rect = CGRectMake(0, 0, 728, 90);
-        } 
+    if (size.isAdaptive) {
+        adSize = [VungleAdSize VungleAdSizeWithWidth:size.containerParams.width];
     }
 
-    return rect;
+    return adSize;
 }
 
 @end

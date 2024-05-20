@@ -28,5 +28,5 @@ static NSString * Githash = @"";
 @import WebKit;
 
 @interface ISVungleAdapter : ISBaseAdapter
-
+- (CGFloat)getAdaptiveHeightWithWidth:(CGFloat)width;
 @end
