@@ -655,16 +655,17 @@ static InitState initState = INIT_STATE_NONE;
         VungleAdSize *adSize = [self getBannerSize:size];
         
         // create vungle banner ad
-        VungleBannerView *vungleBannerViewAd = [[VungleBannerView alloc] initWithPlacementId: placementId vungleAdSize: adSize];
+        VungleBannerView *vungleBannerView = [[VungleBannerView alloc] initWithPlacementId:placementId
+                                                                              vungleAdSize:adSize];
         
         // set delegate
-        vungleBannerViewAd.delegate = bannerAdDelegate;
+        vungleBannerView.delegate = bannerAdDelegate;
 
-        [self.bannerPlacementIdToAd setObject:vungleBannerViewAd
+        [self.bannerPlacementIdToAd setObject:vungleBannerView
                                        forKey:placementId];
 
         // load banner
-        [vungleBannerViewAd load:serverData];
+        [vungleBannerView load:serverData];
     });
 }
 

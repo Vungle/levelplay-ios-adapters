@@ -55,5 +55,4 @@
     [self.delegate adapterBannerWillLeaveApplication];
 }
 
-
 @end
