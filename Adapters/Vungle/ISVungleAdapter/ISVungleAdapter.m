@@ -799,7 +799,7 @@ static InitState initState = INIT_STATE_NONE;
         }
     }
     if (size.isAdaptive) {
-        adSize = [VungleAdSize VungleAdSizeWithWidth:size.containerParams.width];
+        adSize = [VungleAdSize VungleAdSizeFromCGSize:CGSizeMake(size.width, size.height)];
     }
 
     return adSize;
