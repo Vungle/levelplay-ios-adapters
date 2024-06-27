@@ -689,10 +689,6 @@ static InitState initState = INIT_STATE_NONE;
     return [self getBiddingDataWithPlacementId:placementId];
 }
 
-- (CGFloat)getAdaptiveHeightWithWidth:(CGFloat)width {
-    return [VungleAdSize VungleAdSizeWithWidth:width].size.height;
-}
-
 #pragma mark - Memory Handling
 
 - (void)releaseMemoryWithAdapterConfig:(nonnull ISAdapterConfig *)adapterConfig {
@@ -797,9 +793,6 @@ static InitState initState = INIT_STATE_NONE;
         } else {
             adSize = [VungleAdSize VungleAdSizeBannerRegular];
         }
-    }
-    if (size.isAdaptive) {
-        adSize = [VungleAdSize VungleAdSizeWithWidth:size.width];
     }
 
     return adSize;
