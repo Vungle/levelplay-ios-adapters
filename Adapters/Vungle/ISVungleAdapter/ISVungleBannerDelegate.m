@@ -25,7 +25,6 @@
 - (void)bannerAdDidLoad:(VungleBannerView * _Nonnull)bannerView {
     LogAdapterDelegate_Internal(@"placementId = %@", self.placementId);
     [self.delegate adapterBannerDidLoad:bannerView];
-    // aki:todo - might need to retun the w and h to IS side...?
 }
 
 - (void)bannerAdDidFailToLoad:(VungleBannerView * _Nonnull)bannerView
