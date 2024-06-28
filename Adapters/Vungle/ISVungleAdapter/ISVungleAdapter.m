@@ -779,15 +779,15 @@ static InitState initState = INIT_STATE_NONE;
 
 - (VungleAdSize *)getBannerSize:(ISBannerSize *)size {
     VungleAdSize *adSize = [VungleAdSize VungleAdSizeBannerRegular];
-    if ([size.sizeDescription isEqualToString:@"CUSTOM"]) {
+    if ([size.sizeDescription isEqualToString:kSizeCustom]) {
         adSize = [VungleAdSize VungleAdSizeFromCGSize:CGSizeMake(size.width, size.height)];
-    } else if ([size.sizeDescription isEqualToString:@"BANNER"] || [size.sizeDescription isEqualToString:@"LARGE"]) {
+    } else if ([size.sizeDescription isEqualToString:kSizeBanner] || [size.sizeDescription isEqualToString:kSizeLarge]) {
         adSize = [VungleAdSize VungleAdSizeBannerRegular];
-    } else if ([size.sizeDescription isEqualToString:@"RECTANGLE"]) {
+    } else if ([size.sizeDescription isEqualToString:kSizeRectangle]) {
         adSize = [VungleAdSize VungleAdSizeMREC];
-    } else if ([size.sizeDescription isEqualToString:@"LEADERBOARD"]) {
+    } else if ([size.sizeDescription isEqualToString:kSizeLeaderboard]) {
         adSize = [VungleAdSize VungleAdSizeLeaderboard];
-    } else if ([size.sizeDescription isEqualToString:@"SMART"]) {
+    } else if ([size.sizeDescription isEqualToString:kSizeSmart]) {
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             adSize = [VungleAdSize VungleAdSizeLeaderboard];
         } else {
