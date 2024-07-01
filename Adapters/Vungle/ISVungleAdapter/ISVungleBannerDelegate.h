@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *placementId;
 @property (nonatomic, weak) id<ISBannerAdapterDelegate> delegate;
+@property (nonatomic, assign) BOOL isAdloadSuccess;
 
 - (instancetype)initWithPlacementId:(NSString *)placementId
                         andDelegate:(id<ISBannerAdapterDelegate>)delegate;

@@ -16,14 +16,18 @@
     if (self) {
         _placementId = placementId;
         _delegate = delegate;
+        _isAdloadSuccess = NO;
     }
     return self;
 }
 
 #pragma mark - VungleBannerView Delegate
 
+
 - (void)bannerAdDidLoad:(VungleBannerView * _Nonnull)bannerView {
     LogAdapterDelegate_Internal(@"placementId = %@", self.placementId);
+    
+    self.isAdloadSuccess = YES;
     [self.delegate adapterBannerDidLoad:bannerView];
 }
 
@@ -35,8 +39,11 @@
     NSError *bannerError = [NSError errorWithDomain:kAdapterName
                                                code:errorCode
                                            userInfo:@{NSLocalizedDescriptionKey:error.description}];
-
-    [self.delegate adapterBannerDidFailToLoadWithError:bannerError];
+    if (self.isAdloadSuccess) {
+        [self.delegate adapterBannerDidFailToShowWithError:bannerError];
+    } else {
+        [self.delegate adapterBannerDidFailToLoadWithError:bannerError];
+    }
 }
 
 - (void)bannerAdDidTrackImpression:(VungleBannerView * _Nonnull)bannerView {
