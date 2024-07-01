@@ -778,24 +778,20 @@ static InitState initState = INIT_STATE_NONE;
 }
 
 - (VungleAdSize *)getBannerSize:(ISBannerSize *)size {
-    VungleAdSize *adSize = [VungleAdSize VungleAdSizeBannerRegular];
     if ([size.sizeDescription isEqualToString:kSizeCustom]) {
-        adSize = [VungleAdSize VungleAdSizeFromCGSize:CGSizeMake(size.width, size.height)];
+        return [VungleAdSize VungleAdSizeFromCGSize:CGSizeMake(size.width, size.height)];
     } else if ([size.sizeDescription isEqualToString:kSizeBanner] || [size.sizeDescription isEqualToString:kSizeLarge]) {
-        adSize = [VungleAdSize VungleAdSizeBannerRegular];
+        return [VungleAdSize VungleAdSizeBannerRegular];
     } else if ([size.sizeDescription isEqualToString:kSizeRectangle]) {
-        adSize = [VungleAdSize VungleAdSizeMREC];
+        return [VungleAdSize VungleAdSizeMREC];
     } else if ([size.sizeDescription isEqualToString:kSizeLeaderboard]) {
-        adSize = [VungleAdSize VungleAdSizeLeaderboard];
+        return [VungleAdSize VungleAdSizeLeaderboard];
     } else if ([size.sizeDescription isEqualToString:kSizeSmart]) {
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            adSize = [VungleAdSize VungleAdSizeLeaderboard];
-        } else {
-            adSize = [VungleAdSize VungleAdSizeBannerRegular];
+            return [VungleAdSize VungleAdSizeLeaderboard];
         }
     }
-
-    return adSize;
+    return [VungleAdSize VungleAdSizeBannerRegular];
 }
 
 @end

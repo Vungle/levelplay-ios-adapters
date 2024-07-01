@@ -27,8 +27,8 @@
     [self.delegate adapterBannerDidLoad:bannerView];
 }
 
-- (void)bannerAdDidFailToLoad:(VungleBannerView * _Nonnull)bannerView
-                    withError:(NSError * _Nonnull)error {
+- (void)bannerAdDidFail:(VungleBannerView * _Nonnull)bannerView
+              withError:(NSError * _Nonnull)error {
     LogAdapterDelegate_Internal(@"placementId = %@ error = %@", self.placementId, error);
     
     NSInteger errorCode = (error.code == kVungleNoFillErrorCode) ? ERROR_BN_LOAD_NO_FILL : error.code;
