@@ -780,8 +780,6 @@ static InitState initState = INIT_STATE_NONE;
 - (VungleAdSize *)getBannerSize:(ISBannerSize *)size {
     if ([size.sizeDescription isEqualToString:kSizeCustom]) {
         return [VungleAdSize VungleAdSizeFromCGSize:CGSizeMake(size.width, size.height)];
-    } else if ([size.sizeDescription isEqualToString:kSizeBanner] || [size.sizeDescription isEqualToString:kSizeLarge]) {
-        return [VungleAdSize VungleAdSizeBannerRegular];
     } else if ([size.sizeDescription isEqualToString:kSizeRectangle]) {
         return [VungleAdSize VungleAdSizeMREC];
     } else if ([size.sizeDescription isEqualToString:kSizeLeaderboard]) {
