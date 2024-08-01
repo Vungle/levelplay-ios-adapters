@@ -783,7 +783,7 @@ static InitState initState = INIT_STATE_NONE;
 
 - (VungleAdSize *)getBannerSize:(ISBannerSize *)size {
     if (size.isAdaptive) {
-        return [VungleAdSize VungleAdSizeWithWidth:size.width];
+        return [VungleAdSize VungleAdSizeFromCGSize:CGSizeMake(size.width, 0)];
     } else if ([size.sizeDescription isEqualToString:kSizeCustom]) {
         return [VungleAdSize VungleAdSizeFromCGSize:CGSizeMake(size.width, size.height)];
     } else if ([size.sizeDescription isEqualToString:kSizeRectangle]) {
