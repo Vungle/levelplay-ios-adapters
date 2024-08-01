@@ -690,7 +690,7 @@ static InitState initState = INIT_STATE_NONE;
 }
 
 - (CGFloat)getAdaptiveHeightWithWidth:(CGFloat)width {
-    return [VungleAdSize VungleAdSizeWithWidth:width].size.height;
+    return [[UIScreen mainScreen] bounds].size.height;
 }
 
 #pragma mark - Memory Handling
