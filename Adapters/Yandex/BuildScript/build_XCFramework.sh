@@ -25,10 +25,11 @@ xcrun xcodebuild -workspace "${ADAPTER_WORKSPACE}" \
     -configuration "${CONFIGURATION}" \
     -sdk "$1" \
     ONLY_ACTIVE_ARCH=NO \
-    BUILD_LIBRARY_FOR_DISTRIBUTION=YES\
+    BUILD_LIBRARY_FOR_DISTRIBUTION=NO \
+    SKIP_INSTALL=NO \
     ARCHS="$2" \
     BUILD_DIR="${BUILD_DIR}" \
-    OBJROOT="${OBJROOT}\DependentBuilds" \
+    OBJROOT="${OBJROOT}/DependentBuilds" \
     BUILD_ROOT="${BUILD_ROOT}" \
     SYMROOT="${SYMROOT}" $ACTION
 
@@ -37,7 +38,7 @@ xcrun xcodebuild -workspace "${ADAPTER_WORKSPACE}" \
 
 
   createFramework "iphoneos" "arm64"
-  createFramework "iphonesimulator" "x86_64" 
+  createFramework "iphonesimulator" "x86_64"
 
 
 
