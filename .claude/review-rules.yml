@@ -1,0 +1,29 @@
+review_rules:
+  - path: "Adapters/**/*.{h,m}"
+    rules:
+      - Adapter must extend ISBaseAdapter
+      - All three ad formats (Banner, Interstitial, Rewarded Video) must be supported
+      - Format-specific delegate classes must be separate files
+      - Constants must be defined in a dedicated IS{Network}Constants.h header
+      - Memory management must be correct (no retain cycles in delegate patterns)
+      - All callbacks must dispatch on the main thread
+
+  - path: "Adapters/**/*Delegate*.{h,m}"
+    rules:
+      - Each delegate class handles exactly one ad format
+      - Must implement all required delegate methods for the format
+      - Must forward events correctly to the ironSource mediation layer
+      - Must handle error cases and report them via appropriate callbacks
+
+  - path: "**/Podfile"
+    rules:
+      - Must specify the correct ironSource SDK dependency version
+      - Must specify the correct third-party network SDK version
+      - Platform version must be iOS 12.0 or higher
+
+  - path: "**/*.sh"
+    rules:
+      - xcframework build scripts must handle both device and simulator slices
+      - Must use xcodebuild archive and -create-xcframework
+      - Must clean previous build artifacts before rebuilding
+      - Output paths must be consistent and documented

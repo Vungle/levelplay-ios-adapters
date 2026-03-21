@@ -1,0 +1,38 @@
+conventions:
+  - id: adapter-structure
+    description: >
+      Each network adapter lives under Adapters/{Network}/IS{Network}Adapter/.
+      All adapters extend ISBaseAdapter. Each adapter has format-specific
+      delegate classes and a constants header. Per-adapter Podfile for
+      CocoaPods dependency management.
+    applies_to: "Adapters/**/*.{h,m}"
+
+  - id: naming-conventions
+    description: >
+      Adapter class: IS{Network}Adapter. Delegate classes:
+      IS{Network}{Format}Delegate (e.g., ISVungleRewardedVideoDelegate).
+      Constants: IS{Network}Constants.h. All code is Objective-C following
+      Apple naming conventions.
+    applies_to: "Adapters/**/*.{h,m}"
+
+  - id: ad-format-support
+    description: >
+      All adapters support Banner, Interstitial, and Rewarded Video.
+      Native Ads supported only by the Google adapter. Each format has
+      its own delegate class handling callbacks independently.
+    applies_to: "Adapters/**/*.m"
+
+  - id: version-management
+    description: >
+      Adapter versions are managed per network. Version numbers and
+      SDK dependencies are declared in the adapter's Podfile and source.
+      Constants header typically contains version string.
+    applies_to: "Adapters/**/*"
+
+  - id: xcframework-build
+    description: >
+      The build_XCFramework.sh script produces xcframework bundles
+      combining device and simulator architectures. This is the primary
+      distribution format for adapter binaries. Scripts use xcodebuild
+      archive and -create-xcframework.
+    applies_to: "**/*.sh"
