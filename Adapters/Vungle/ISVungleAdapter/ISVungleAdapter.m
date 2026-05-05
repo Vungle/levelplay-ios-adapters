@@ -372,18 +372,18 @@ static InitState initState = INIT_STATE_NONE;
     
     NSString *placementId = adapterConfig.settings[kPlacementId];
     LogAdapterApi_Internal(@"placementId = %@", placementId);
-    
+
+    VungleRewarded *rewardedVideoAd = [self.rewardedVideoPlacementIdToAd objectForKey:placementId];
+
     if (![self hasRewardedVideoWithAdapterConfig:adapterConfig]) {
         NSError *error = [ISError createError:ERROR_CODE_NO_ADS_TO_SHOW
                                   withMessage:[NSString stringWithFormat: @"%@ show failed", kAdapterName]];
         LogAdapterApi_Internal(@"error = %@", error);
-        [VungleMediationLogger logErrorForAd:nil message:@"NoAdsToShow:Rewarded"];
+        [VungleMediationLogger logErrorForAd:rewardedVideoAd message:@"NoAdsToShow:Rewarded"];
         [delegate adapterRewardedVideoDidFailToShowWithError:error];
         return;
     }
-    
-    VungleRewarded *rewardedVideoAd = [self.rewardedVideoPlacementIdToAd objectForKey:placementId];
-    
+
     //set dynamic user Id
     if ([self dynamicUserId]) {
         LogAdapterApi_Internal(@"set userID to %@", [self dynamicUserId]);
@@ -521,17 +521,18 @@ static InitState initState = INIT_STATE_NONE;
     
     NSString *placementId = adapterConfig.settings[kPlacementId];
     LogAdapterApi_Internal(@"placementId = %@", placementId);
-    
+
+    VungleInterstitial *interstitialAd = [self.interstitialPlacementIdToAd objectForKey:placementId];
+
     if (![self hasInterstitialWithAdapterConfig:adapterConfig]) {
         NSError *error = [ISError createError:ERROR_CODE_NO_ADS_TO_SHOW
                                   withMessage:[NSString stringWithFormat: @"%@ show failed", kAdapterName]];
         LogAdapterApi_Internal(@"error = %@", error);
-        [VungleMediationLogger logErrorForAd:nil message:@"NoAdsToShow:Interstitial"];
+        [VungleMediationLogger logErrorForAd:interstitialAd message:@"NoAdsToShow:Interstitial"];
         [delegate adapterInterstitialDidFailToShowWithError:error];
         return;
     }
-    
-    VungleInterstitial *interstitialAd = [self.interstitialPlacementIdToAd objectForKey:placementId];
+
     dispatch_async(dispatch_get_main_queue(), ^{
         [interstitialAd presentWith:viewController];
     });
